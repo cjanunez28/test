@@ -5,7 +5,7 @@ node {
 
     stage('SonarQube Analysis') {
         // Nombre del escáner configurado en Jenkins (asegúrate de usar el mismo)
-        def scannerHome = tool name: 'semestral2.0', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+        def scannerHome = tool name: 'fdf', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 
         // Usa las credenciales y URL del servidor SonarQube configuradas en Jenkins
         withSonarQubeEnv('SonarQube') {
