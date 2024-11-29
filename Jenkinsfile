@@ -1,32 +1,17 @@
-pipeline {
-    agent any
-    environment {
-        SONARQUBE_TOKEN = credentials('sonarqube-token-id') // Configura las credenciales en Jenkins
-        SONARQUBE_URL = 'http://4.204.40.19:9000'
+node {
+    stage('SCM') {
+        checkout scm
     }
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('semestral2.0') { // Nombre de la configuración en Jenkins
-                    sh """
-                    sonar-scanner \
-                    -Dsonar.projectKey=semestralciberV \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=${SONARQUBE_URL} \
-                    -Dsonar.login=${SONARQUBE_TOKEN}
-                    """
-                }
-            }
-        }
-    }
-    post {
-        always {
-            echo 'Pipeline completed.'
+
+    stage('SonarQube Analysis') {
+        // Nombre del escáner configurado en Jenkins (asegúrate de usar el mismo)
+        def scannerHome = tool name: 'semestral2.0', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+
+        // Usa las credenciales y URL del servidor SonarQube configuradas en Jenkins
+        withSonarQubeEnv('SonarQube') {
+            // Ejecuta el análisis
+            sh "${scannerHome}/bin/sonar-scanner"
         }
     }
 }
+
